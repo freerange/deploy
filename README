@@ -1,0 +1,33 @@
+freerange/deploy
+================
+
+Allows simple, git-based deployment on freerange-compatible servers (see assumptions below)
+
+How to use
+----------
+
+In your project, create a Capfile, like this:
+
+    require 'freerange/deploy'
+
+    server "gofreerange.com", :app, :web, :db, :primary => true
+    set :application, "gofreerange.com" # defaults to the name of the repo at origin
+
+Next, prepare the server:
+
+    $ cap deploy:setup
+    
+This adds a git remote to your local repository, and creates an apache virtual host configuration on the server, and performs the initial git deploy. To deploy again, just push to 'production'
+
+    % git push production master
+
+
+
+Assumptions
+-----------
+
+1. You're deploying as 'deploy'
+2. You're deploying to /var/www/<application>
+3. Your apache is setup to read vhost files from /var/www/apache_vhost
+4. The deploy user has write access to that directory
+5. The deploy user is a sudoer
