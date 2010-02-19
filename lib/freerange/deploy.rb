@@ -38,7 +38,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
     task :setup_apache do
       vhost_template =<<-EOT
-<VirtualHost *>
+<VirtualHost *:80>
   DocumentRoot /var/www/#{application}/public
   ServerName #{application}
   <Directory "/var/www/#{application}/public">
