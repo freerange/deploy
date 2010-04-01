@@ -1,10 +1,10 @@
-set :stages, %w(production)
+set :stages, %w(staging production)
 set :default_stage, "production"
 
 require 'freerange/deploy'
 
 set :application, "<%= name %>"
-set :repository,  "<%= repo %>"
+set :repository,  "<%= repository %>"
 
 after "deploy:finalize_update" do
   # The default recipe already runs bundler install and db:migrate

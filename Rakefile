@@ -17,10 +17,10 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange_deploy"
-  s.version            = "0.1.2"
+  s.version            = "0.1.3"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
-  s.author             = "James Adam"
-  s.email              = "james.adam@gofreerange.com"
+  s.author             = "James Adam, Tom Ward"
+  s.email              = "lets@gofreerange.com"
   s.homepage           = "http://gofreerange.com"
   s.default_executable = %q{freerange-deploy}
   s.executables        = ["freerange-deploy"]
@@ -35,7 +35,9 @@ spec = Gem::Specification.new do |s|
 
   # If you want to depend on other gems, add them here, along with any
   # relevant versions
-  s.add_dependency("git-deploy", "~> 0.3.0")
+  s.add_dependency("capistrano")
+  s.add_dependency("capistrano-ext")
+  s.add_dependency("thor")
 
   # If your tests use any gems, include them here
   # s.add_development_dependency("mocha") # for example

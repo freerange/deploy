@@ -25,24 +25,26 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :create do
       vhost_template =<<-EOT
 <VirtualHost *:80>
-  ServerName #{host}
-  DocumentRoot /var/www/#{application}/public
-  <Directory "/var/www/#{application}/public">
+  ServerName #{domain}
+  DocumentRoot /var/www/#{application}/current/public
+  <Directory "/var/www/#{application}/current/public">
     allow from all
     Options +Indexes
   </Directory>
 </VirtualHost>
       EOT
       
-      put vhost_template.strip, "/etc/apache2/sites-available/#{host}"
+      put vhost_template.strip, "/etc/apache2/sites-available/#{domain}"
     end
     
     task :enable do
-      "sudo a2ensite #{host} && sudo apache2ctl graceful"
+      run "a2ensite #{domain}"
+      sudo "apache2ctl graceful"
     end
     
     task :disable do
-      "sudo a2dissite #{host} && sudo apache2ctl graceful"
+      run "a2dissite #{domain}"
+      sudo "apache2ctl graceful"
     end
     
     task :setup do
