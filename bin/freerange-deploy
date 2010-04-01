@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'freerange/cli/deploy'
+FreeRange::CLI::Deploy.start

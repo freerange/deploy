@@ -16,13 +16,15 @@ end
 spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
-  s.name              = "freerange_deploy"
-  s.version           = "0.1.1"
-  s.summary           = "Enables simple git-based deployments to freerange-compatible hosts"
-  s.author            = "James Adam"
-  s.email             = "james.adam@gofreerange.com"
-  s.homepage          = "http://gofreerange.com"
-
+  s.name               = "freerange_deploy"
+  s.version            = "0.1.2"
+  s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
+  s.author             = "James Adam"
+  s.email              = "james.adam@gofreerange.com"
+  s.homepage           = "http://gofreerange.com"
+  s.default_executable = %q{freerange-deploy}
+  s.executables        = ["freerange-deploy"]
+  
   s.has_rdoc          = true
   s.extra_rdoc_files  = %w(README)
   s.rdoc_options      = %w(--main README)
@@ -48,11 +50,27 @@ end
 # about that here: http://gemcutter.org/pages/gem_docs
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
-
-  # Generate the gemspec file for github.
-  file = File.dirname(__FILE__) + "/#{spec.name}.gemspec"
-  File.open(file, "w") {|f| f << spec.to_ruby }
 end
+
+# Stolen from jeweler
+def prettyify_array(gemspec_ruby, array_name)
+  gemspec_ruby.gsub(/s\.#{array_name.to_s} = \[.+?\]/) do |match|
+    leadin, files = match[0..-2].split("[")
+    leadin + "[\n    #{files.split(",").join(",\n   ")}\n  ]"
+  end
+end
+
+task :gemspec do
+  output = spec.to_ruby
+  output = prettyify_array(output, :files)
+  output = prettyify_array(output, :test_files)
+  output = prettyify_array(output, :extra_rdoc_files)
+
+  file = File.expand_path("../#{spec.name}.gemspec", __FILE__)
+  File.open(file, "w") {|f| f << output }
+end
+
+task :package => :gemspec
 
 # Generate documentation
 Rake::RDocTask.new do |rd|

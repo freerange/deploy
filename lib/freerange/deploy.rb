@@ -1,4 +1,4 @@
-require "git_deploy"
+require 'capistrano/ext/multistage'
 
 Capistrano::Configuration.instance(:must_exist).load do
   # User details
@@ -11,50 +11,63 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # SCM settings
   set :scm,           'git'
-  # set to the name of git remote you intend to deploy to
-  set :remote,        'production' # overrides the default git-deploy setting of 'origin'
-  # specify the deployment branch
-  set :branch,        'master'
+  set :deploy_via, :remote_cache
 
-  # The appliation name defaults to the name of the repository at the origin remote
-  set(:application) { File.basename(`#{source.local.scm('config', "remote.origin.url")}`, ".git") }
-  
   # Deploy to our default location
   set(:deploy_to)   { "/var/www/#{application}" }
+  set(:sites)       { }
 
   # Git settings for Capistrano
   default_run_options[:pty]     = true # needed for git password prompts
   ssh_options[:forward_agent]   = true # use the keys for the person running the cap command to check out the app
 
-
-  before "deploy:setup", "freerange:setup_git_remote"
-  after "deploy:setup", "freerange:setup_apache"
-
-  namespace "freerange" do
-    task :setup_git_remote do
-      remote_url = "deploy@#{roles[:app].first}:/var/www/#{application}"
-      puts "Setting up git remote '#{remote}' -> #{remote_url}"
-      `git remote add #{remote} #{remote_url}`
-    end
-    task :setup_apache do
+  namespace :host do
+    task :create do
       vhost_template =<<-EOT
 <VirtualHost *:80>
+  ServerName #{host}
   DocumentRoot /var/www/#{application}/public
-  ServerName #{application}
   <Directory "/var/www/#{application}/public">
     allow from all
     Options +Indexes
-    </Directory>
+  </Directory>
 </VirtualHost>
       EOT
-
-      put vhost_template.strip, "/var/www/apache_vhosts/#{application}"
       
-      # Disable the default site, just in case; it will get in the way.
-      sudo "a2dissite default"
-      
-      # Restart apache
-      sudo "apache2ctl restart"
+      put vhost_template.strip, "/etc/apache2/sites-available/#{host}"
     end
+    
+    task :enable do
+      "sudo a2ensite #{host} && sudo apache2ctl graceful"
+    end
+    
+    task :disable do
+      "sudo a2dissite #{host} && sudo apache2ctl graceful"
+    end
+    
+    task :setup do
+      host.create
+      host.enable
+    end
+  end
+  
+  # We're using passenger, so start/stop don't apply, while restart needs to just
+  # touch path/restart.txt
+
+  namespace :deploy do
+    task :start do ; end
+    task :stop do ; end
+    task :restart, :roles => :app, :except => { :no_release => true } do
+      run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+    end
+
+    task :bundle, :roles => :app do
+      run "cd #{release_path} && bundle install"
+    end
+  end
+
+  after "deploy:finalize_update" do
+    deploy.bundle
+    deploy.migrate
   end
 end
