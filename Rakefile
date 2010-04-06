@@ -2,7 +2,7 @@ require "rubygems"
 require "rake/gempackagetask"
 require "rake/rdoctask"
 
-
+path = File.expand_path("..", __FILE__)
 
 task :default => :package do
   puts "Don't forget to write some tests!"
@@ -30,7 +30,7 @@ spec = Gem::Specification.new do |s|
   s.rdoc_options      = %w(--main README)
 
   # Add any extra files to include in the gem
-  s.files             = %w(freerange_deploy.gemspec Rakefile README) + Dir.glob("{lib/**/*}")
+  s.files             = `cd #{path} && git ls-files`.split("\n").sort
   s.require_paths     = ["lib"]
 
   # If you want to depend on other gems, add them here, along with any

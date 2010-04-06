@@ -2,20 +2,28 @@
 
 Gem::Specification.new do |s|
   s.name = %q{freerange_deploy}
-  s.version = "0.1.1"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["James Adam"]
-  s.date = %q{2010-04-01}
-  s.email = %q{james.adam@gofreerange.com}
+  s.authors = ["James Adam, Tom Ward"]
+  s.date = %q{2010-04-06}
+  s.default_executable = %q{freerange-deploy}
+  s.email = %q{lets@gofreerange.com}
+  s.executables = ["freerange-deploy"]
   s.extra_rdoc_files = [
     "README"
   ]
   s.files = [
-    "freerange_deploy.gemspec",
-    "Rakefile",
+    ".gitignore",
     "README",
-    "lib/freerange",
+    "Rakefile",
+    "bin/freerange-deploy",
+    "freerange_deploy.gemspec",
+    "lib/freerange/cli/deploy.rb",
+    "lib/freerange/cli/templates/Capfile.erb",
+    "lib/freerange/cli/templates/deploy.rb.erb",
+    "lib/freerange/cli/templates/production.rb.erb",
+    "lib/freerange/cli/templates/staging.rb.erb",
     "lib/freerange/deploy.rb"
   ]
   s.homepage = %q{http://gofreerange.com}
@@ -29,11 +37,17 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<git-deploy>, ["~> 0.3.0"])
+      s.add_runtime_dependency(%q<capistrano>, [">= 0"])
+      s.add_runtime_dependency(%q<capistrano-ext>, [">= 0"])
+      s.add_runtime_dependency(%q<thor>, [">= 0"])
     else
-      s.add_dependency(%q<git-deploy>, ["~> 0.3.0"])
+      s.add_dependency(%q<capistrano>, [">= 0"])
+      s.add_dependency(%q<capistrano-ext>, [">= 0"])
+      s.add_dependency(%q<thor>, [">= 0"])
     end
   else
-    s.add_dependency(%q<git-deploy>, ["~> 0.3.0"])
+    s.add_dependency(%q<capistrano>, [">= 0"])
+    s.add_dependency(%q<capistrano-ext>, [">= 0"])
+    s.add_dependency(%q<thor>, [">= 0"])
   end
 end
