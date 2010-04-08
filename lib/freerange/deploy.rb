@@ -90,8 +90,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
         hosts = roles[:app].collect{|r| r.host }.join(", ")
 
-        room.speak "#{name} has deployed build #{deployed} of #{application} to #{hosts}"
-        room.speak "Changes: #{compare_url}"
+        room.speak "#{name} has deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
       end
     end
   end
