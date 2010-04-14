@@ -33,26 +33,26 @@ Capistrano::Configuration.instance(:must_exist).load do
   </Directory>
 </VirtualHost>
       EOT
-      
+
       put vhost_template.strip, "/etc/apache2/sites-available/#{domain}"
     end
-    
+
     task :enable do
       run "a2ensite #{domain}"
       sudo "apache2ctl graceful"
     end
-    
+
     task :disable do
       run "a2dissite #{domain}"
       sudo "apache2ctl graceful"
     end
-    
+
     task :setup do
       host.create
       host.enable
     end
   end
-  
+
   # We're using passenger, so start/stop don't apply, while restart needs to just
   # touch path/restart.txt
 
@@ -102,5 +102,19 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   after "deploy:restart" do
     deploy.announce
+  end
+
+  desc "Tail server log files"
+  task :tail, :roles => :app do
+    trap("INT") { exit(0) }
+    puts
+    puts "Checking server time"
+    run "date"
+    puts
+    run "tail -f #{shared_path}/log/#{stage}.log" do |channel, stream, data|
+      puts  # for an extra line break before the host name
+      puts "#{channel[:host]}: #{data}"
+      break if stream == :err
+    end
   end
 end
