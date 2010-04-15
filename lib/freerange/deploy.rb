@@ -21,19 +21,20 @@ Capistrano::Configuration.instance(:must_exist).load do
   default_run_options[:pty]     = true # needed for git password prompts
   ssh_options[:forward_agent]   = true # use the keys for the person running the cap command to check out the app
 
+  set(:vhost_template) {<<-EOT
+<VirtualHost *:80>
+ServerName #{domain}
+DocumentRoot /var/www/#{application}/current/public
+<Directory "/var/www/#{application}/current/public">
+allow from all
+Options +Indexes
+</Directory>
+</VirtualHost>
+EOT
+  }
+
   namespace :host do
     task :create do
-      vhost_template =<<-EOT
-<VirtualHost *:80>
-  ServerName #{domain}
-  DocumentRoot /var/www/#{application}/current/public
-  <Directory "/var/www/#{application}/current/public">
-    allow from all
-    Options +Indexes
-  </Directory>
-</VirtualHost>
-      EOT
-
       put vhost_template.strip, "/etc/apache2/sites-available/#{domain}"
     end
 
