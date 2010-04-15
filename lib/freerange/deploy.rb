@@ -53,6 +53,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
   end
 
+  after "deploy:setup", "host:setup"
+
   # We're using passenger, so start/stop don't apply, while restart needs to just
   # touch path/restart.txt
 

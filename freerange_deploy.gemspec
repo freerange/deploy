@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{freerange_deploy}
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Adam, Tom Ward"]
-  s.date = %q{2010-04-14}
+  s.date = %q{2010-04-15}
   s.default_executable = %q{freerange-deploy}
   s.email = %q{lets@gofreerange.com}
   s.executables = ["freerange-deploy"]
