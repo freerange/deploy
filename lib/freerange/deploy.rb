@@ -120,4 +120,15 @@ EOT
       break if stream == :err
     end
   end
+
+  desc "Print the version of the currently deployed application"
+  task :version do
+    version = nil
+    run "cd #{current_path} && git rev-parse HEAD" do |ch, stream, data|
+      if stream == :out
+        version = data
+      end
+    end
+    puts version
+  end
 end
