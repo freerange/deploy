@@ -54,7 +54,16 @@ EOT
     end
   end
 
+  namespace :redis do
+    task :setup do
+      if fetch('require_redis', nil)
+        sudo "apt-get install redis-server"
+      end
+    end
+  end
+
   after "deploy:setup", "host:setup"
+  after "deploy:setup", "redis:setup"
 
   # We're using passenger, so start/stop don't apply, while restart needs to just
   # touch path/restart.txt

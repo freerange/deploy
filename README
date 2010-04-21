@@ -23,6 +23,18 @@ For simple apps, you should now be able to deploy:
 
     $ cap production deploy
 
+Configuring Redis on server
+---------------------------
+You can install redis on the destination server by setting this variable in config/deploy.rb
+
+    set :require_redis, true
+
+Now when you run the cap:setup task redis will be installed or you can run this task manually:
+
+    $ cap production setup:redis
+
+Redis is installed with the ubuntu default config living in /etc/redis/redis.conf. It will run on port 6379.
+
 Assumptions
 -----------
 

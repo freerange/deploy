@@ -12,6 +12,9 @@ set :repository,  "<%= repository %>"
 # set :campfire_room,     "room-name"
 # set :campfire_key,  "abcdef1234567890"
 
+# set the following to true for redis to be setup on the server
+# set :require_redis, false
+
 after "deploy:finalize_update" do
   # The default recipe already runs bundler install and db:migrate
   # but other steps you need to run after the code has been updated
