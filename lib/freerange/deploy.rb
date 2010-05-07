@@ -80,8 +80,7 @@ set mailserver localhost
 set mail-format { from: #{monit_email} }
 set alert #{monit_email}
 set httpd port 2812 and
-  use address localhost
-  allow localhost
+  allow deploy:fr33r4n63
 check system localhost
   if loadavg (1min) > 4 then alert
   if loadavg (5min) > 2 then alert
