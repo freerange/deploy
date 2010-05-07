@@ -79,7 +79,9 @@ set logfile syslog facility log_daemon
 set mailserver localhost
 set mail-format { from: #{monit_email} }
 set alert #{monit_email}
-set httpd port 2812
+set httpd port 2812 and
+  use address localhost
+  allow localhost
 check system localhost
   if loadavg (1min) > 4 then alert
   if loadavg (5min) > 2 then alert
