@@ -1,4 +1,4 @@
-  require 'capistrano/ext/multistage'
+require 'capistrano/ext/multistage'
 
 Capistrano::Configuration.instance(:must_exist).load do
   # User details
@@ -64,6 +64,61 @@ EOT
 
   after "deploy:setup", "host:setup"
   after "deploy:setup", "redis:setup"
+
+  set :monit_processes, []
+
+  def monit_process(name, directives)
+    monit_processes << "check process #{name}#{directives}"
+  end
+
+  def combined_monit_config
+    base = %{
+set daemon  120
+  with start delay 240
+set logfile syslog facility log_daemon
+set mailserver localhost
+set mail-format { from: #{monit_email} }
+set alert #{monit_email}
+set httpd port 2812
+check system localhost
+  if loadavg (1min) > 4 then alert
+  if loadavg (5min) > 2 then alert
+  if memory usage > 75% then alert
+  if cpu usage (user) > 70% then alert
+  if cpu usage (system) > 30% then alert
+  if cpu usage (wait) > 20% then alert}
+
+    apache = %{
+check process apache2 with pidfile /var/run/apache2.pid
+  start program = "/usr/sbin/apache2ctl start"
+  stop  program = "/usr/sbin/apache2ctl stop"
+  if cpu > 60% for 2 cycles then alert
+  if cpu > 80% for 5 cycles then restart
+  if children > 200 then restart
+  if loadavg(5min) greater than 10 for 8 cycles then restart}
+
+    ([base, apache] + monit_processes).join("\n")
+  end
+
+  def sudo_put(data, target)
+    tmp = "#{shared_path}/~tmp-#{rand(9999999)}"
+    put data, tmp
+    on_rollback { run "rm #{tmp}" }
+    sudo "cp -f #{tmp} #{target} && rm #{tmp}"
+  end
+
+  namespace :monit do
+    task :setup do
+      if monit_processes.any?
+        sudo "apt-get install monit"
+        sudo_put combined_monit_config, "/etc/monit/monitrc"
+        sudo_put "startup=1", "/etc/default/monit"
+        sudo "/etc/init.d/monit restart"
+      end
+    end
+  end
+
+  after "deploy:setup", "monit:setup"
 
   # We're using passenger, so start/stop don't apply, while restart needs to just
   # touch path/restart.txt
