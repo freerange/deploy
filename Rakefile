@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange_deploy"
-  s.version            = "0.1.9"
+  s.version            = "0.1.10"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
   s.author             = "James Adam, Tom Ward, Kalvir Sandhu"
   s.email              = "lets@gofreerange.com"
@@ -38,7 +38,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency("capistrano")
   s.add_dependency("capistrano-ext")
   s.add_dependency("thor")
-  s.add_dependency("tinder")
+  s.add_dependency("tinder", "1.3.1")
   s.add_dependency("json")
 
   # If your tests use any gems, include them here
