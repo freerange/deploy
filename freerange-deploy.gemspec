@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
     "README",
     "Rakefile",
     "bin/freerange-deploy",
-    "freerange_deploy.gemspec",
+    "freerange-deploy.gemspec",
     "lib/freerange/cli/deploy.rb",
     "lib/freerange/cli/templates/Capfile.erb",
     "lib/freerange/cli/templates/deploy.rb.erb",
