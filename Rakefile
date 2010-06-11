@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange-deploy"
-  s.version            = "0.1.11"
+  s.version            = "0.1.12"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
   s.author             = "James Adam, Tom Ward, Kalvir Sandhu"
   s.email              = "lets@gofreerange.com"
@@ -75,6 +75,10 @@ task :gemspec do
 end
 
 task :package => :gemspec
+
+task :install => :package do
+  `gem install pkg/#{spec.name}-#{spec.version}.gem`
+end
 
 # Generate documentation
 Rake::RDocTask.new do |rd|
