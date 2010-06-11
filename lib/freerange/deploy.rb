@@ -2,15 +2,16 @@ require 'capistrano/ext/multistage'
 
 Capistrano::Configuration.instance(:must_exist).load do
   # User details
-  set :user,          'deploy'
-  set :group,         'admin'
+  set :user, 'deploy'
+  set :group, 'admin'
 
   # Application details
   set(:runner)        { user }
   set :use_sudo,      false
 
   # SCM settings
-  set :scm,           'git'
+  set :scm, 'git'
+  set :branch, 'master'
   set :deploy_via, :remote_cache
 
   # Deploy to our default location
@@ -188,12 +189,6 @@ check process apache2 with pidfile /var/run/apache2.pid
 
   desc "Print the version of the currently deployed application"
   task :version do
-    version = nil
-    run "cd #{current_path} && git rev-parse HEAD" do |ch, stream, data|
-      if stream == :out
-        version = data
-      end
-    end
-    puts version
+    puts "Current version deployed to #{stage} is: #{current_revision}"
   end
 end
