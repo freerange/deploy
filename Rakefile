@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange-deploy"
-  s.version            = "0.1.12"
+  s.version            = "0.1.13"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
   s.author             = "James Adam, Tom Ward, Kalvir Sandhu"
   s.email              = "lets@gofreerange.com"
@@ -90,4 +90,19 @@ end
 desc 'Clear out RDoc and generated packages'
 task :clean => [:clobber_rdoc, :clobber_package] do
   rm "#{spec.name}.gemspec"
+end
+
+desc 'Tag the repository in git with gem version number'
+task :tag => [:gemspec, :package] do
+  if `git diff --cached`.empty?
+    if `git tag`.split("\n").include?("v#{spec.version}")
+      raise "Version #{spec.version} has already been released"
+    end
+    `git add #{File.expand_path("../#{spec.name}.gemspec", __FILE__)}`
+    `git commit -m "Released version #{spec.version}"`
+    `git tag v#{spec.version}`
+    `git push --tags`
+  else
+    raise "Unstaged changes still waiting to be committed"
+  end
 end
