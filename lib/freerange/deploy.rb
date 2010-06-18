@@ -191,4 +191,12 @@ check process apache2 with pidfile /var/run/apache2.pid
   task :version do
     puts "Current version deployed to #{stage} is: #{current_revision}"
   end
+
+  desc "Use github to view which commits have been deployed to staging, but not to production"
+  task :staged_changes do
+    staging = `cap staging version`.split(": ").last.slice(0,8)
+    production = `cap production version`.split(": ").last.slice(0,8)
+    repo = repository.split(":").last.gsub(".git", "")
+    `open "https://github.com/#{repo}/compare/#{production}...#{staging}"`
+  end
 end
