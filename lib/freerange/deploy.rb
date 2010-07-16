@@ -133,7 +133,7 @@ check process apache2 with pidfile /var/run/apache2.pid
     end
 
     task :bundle, :roles => :app do
-      run "cd #{release_path} && bundle install"
+      run "cd #{release_path} && bundle install #{shared_path}/gems"
     end
 
     task :announce do
