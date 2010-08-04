@@ -25,7 +25,8 @@ Gem::Specification.new do |s|
     "lib/freerange/cli/templates/production.rb.erb",
     "lib/freerange/cli/templates/staging.rb.erb",
     "lib/freerange/deploy.rb",
-    "lib/freerange/deploy/aws.rb"
+    "lib/freerange/deploy/aws.rb",
+    "lib/freerange/log.rb"
   ]
   s.homepage = %q{http://gofreerange.com}
   s.rdoc_options = ["--main", "README"]
