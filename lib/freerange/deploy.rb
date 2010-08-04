@@ -173,18 +173,9 @@ check process apache2 with pidfile /var/run/apache2.pid
     deploy.announce
   end
 
-  desc "Tail server log files"
+  desc "Tail server log files (deprecated, use log:tail instead)"
   task :tail, :roles => :app do
-    trap("INT") { exit(0) }
-    puts
-    puts "Checking server time"
-    run "date"
-    puts
-    run "tail -f #{shared_path}/log/#{stage}.log" do |channel, stream, data|
-      puts  # for an extra line break before the host name
-      puts "#{channel[:host]}: #{data}"
-      break if stream == :err
-    end
+
   end
 
   desc "Print the version of the currently deployed application"
