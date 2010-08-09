@@ -104,6 +104,7 @@ task :tag => [:gemspec, :package] do
     `git commit -m "Released version #{spec.version}"`
     `git tag v#{spec.version}`
     `git push --tags`
+    `git push`
   else
     raise "Unstaged changes still waiting to be committed"
   end
