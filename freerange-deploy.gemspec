@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "lib/freerange/cli/templates/staging.rb.erb",
     "lib/freerange/deploy.rb",
     "lib/freerange/deploy/aws.rb",
+    "lib/freerange/deploy/build.rb",
     "lib/freerange/log.rb"
   ]
   s.homepage = %q{http://gofreerange.com}
