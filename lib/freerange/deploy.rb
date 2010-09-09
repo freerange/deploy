@@ -159,7 +159,8 @@ check process apache2 with pidfile /var/run/apache2.pid
 
         hosts = roles[:app].collect{|r| r.host }.join(", ")
 
-        room.speak "#{name} has deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
+        word = name =~ /&/ ? 'have' : 'has'
+        room.speak "#{name} #{word} deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
       end
     end
   end
