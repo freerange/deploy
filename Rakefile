@@ -17,9 +17,9 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange-deploy"
-  s.version            = "0.1.17"
+  s.version            = "0.1.18"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
-  s.author             = "James Adam, Tom Ward, Kalvir Sandhu"
+  s.author             = "Chris Roos, James Adam, Tom Ward, Kalvir Sandhu"
   s.email              = "lets@gofreerange.com"
   s.homepage           = "http://gofreerange.com"
   s.default_executable = %q{freerange-deploy}

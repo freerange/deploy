@@ -169,7 +169,7 @@ check process apache2 with pidfile /var/run/apache2.pid
     deploy.migrate
   end
 
-  after "deploy:restart" do
+  after "deploy" do
     deploy.announce
   end
 
