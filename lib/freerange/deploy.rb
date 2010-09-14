@@ -22,6 +22,18 @@ Capistrano::Configuration.instance(:must_exist).load do
   default_run_options[:pty]     = true # needed for git password prompts
   ssh_options[:forward_agent]   = true # use the keys for the person running the cap command to check out the app
 
+  # This flag can be used to avoid chicken/egg situations such as when stopping queues before a deploy
+  set :first_deploy, false
+
+  namespace :deploy do
+    desc "Deploys project, setting first_deploy flag to true"
+    task :first do
+      set :first_deploy, true
+    end
+  end
+
+  after "deploy:first", "deploy"
+
   set(:vhost_template) {<<-EOT
 <VirtualHost *:80>
 ServerName #{domain}
