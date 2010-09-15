@@ -25,12 +25,13 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :first_deploy, false
 
   namespace :deploy do
-    desc "Deploys project, setting first_deploy flag to true"
+    desc "Runs deploy:setup and deploy, first the first_deploy flag to true"
     task :first do
       set :first_deploy, true
     end
   end
 
+  after "deploy:first", "deploy:setup"
   after "deploy:first", "deploy"
 
   def sudo_put(data, target)
