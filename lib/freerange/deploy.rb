@@ -15,7 +15,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set :deploy_via, :remote_cache
 
   # Deploy to our default location
-  set(:deploy_to)   { "/var/www/#{application}" }
+  set(:deploy_to)   { "/var/apps/#{application}" }
 
   # Git settings for Capistrano
   default_run_options[:pty]     = true # needed for git password prompts
