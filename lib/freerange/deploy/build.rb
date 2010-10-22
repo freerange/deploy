@@ -1,5 +1,6 @@
 require 'tinder'
 require 'json'
+require 'net/http'
 
 module Hub
   # Provides methods for inspecting the environment, such as GitHub user/token
@@ -155,19 +156,42 @@ def campfire_room
   end
 end
 
+def to_pisswhistle(data = {})
+  if defined?(PW_STREAM)
+    unless defined?(PW_STREAM) && defined?(PW_HOST)
+      raise "You must define PW_STREAM and PW_HOST to have build notifications sent to "
+    end
+
+    Net::HTTP.post_form(URI.parse("http://#{PW_DOMAIN}/#{PW_HOST}/ci"),{"payload" => data.to_json})
+  end
+end
+
 extend Hub::Context
 
 namespace :build do
   namespace :announce do
     task :failure do
-      revision = `git rev-parse HEAD`.gsub("\n", '')     
-      campfire_room.speak("Build #{revision} of #{repo_name} failed: #{github_url(:web => true, :user => 'freerange')}/commits/#{revision}")
-      campfire_room.speak(File.read(".build/output"))
+      revision = `git rev-parse HEAD`.gsub("\n", '')
+      message = "Build #{revision} of #{repo_name} failed: #{github_url(:web => true, :user => 'freerange')}/commits/#{revision}"
+      build_output = File.read(".build/output")
+      if defined?(CAMPFIRE_DOMAIN)
+        campfire_room.speak(message)
+        campfire_room.speak(build_output)
+      end
+      to_pisswhistle({
+        :message => message,
+        :result => "failure",
+        :build_output => build_output,
+        :repo_name => repo_name})
     end
-    
+
     task :success do
       revision = `git rev-parse HEAD`.gsub("\n", '')
-      campfire_room.speak("Build #{revision} of #{repo_name} was a great success!")
+      message = "Build #{revision} of #{repo_name} was a great success!"
+      if defined?(CAMPFIRE_ANNOUNCE)
+        campfire_room.speak(message)
+      end
+      to_pisswhistle({:message => message, :result => "success", :repo_name => repo_name})
     end
   end
 end
