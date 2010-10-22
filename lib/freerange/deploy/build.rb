@@ -156,14 +156,8 @@ def campfire_room
   end
 end
 
-def to_pisswhistle(data = {})
-  if defined?(PW_STREAM)
-    unless defined?(PW_STREAM) && defined?(PW_HOST)
-      raise "You must define PW_STREAM and PW_HOST to have build notifications sent to "
-    end
-
-    Net::HTTP.post_form(URI.parse("http://#{PW_DOMAIN}/#{PW_HOST}/ci"),{"payload" => data.to_json})
-  end
+def post_build_to_webook(data = {})
+  Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
 end
 
 extend Hub::Context
@@ -178,11 +172,11 @@ namespace :build do
         campfire_room.speak(message)
         campfire_room.speak(build_output)
       end
-      to_pisswhistle({
+      post_build_to_webook({
         :message => message,
         :result => "failure",
         :build_output => build_output,
-        :repo_name => repo_name})
+        :repo_name => repo_name}) if defined?(BUILD_WEBHOOK_URL)
     end
 
     task :success do
@@ -191,7 +185,7 @@ namespace :build do
       if defined?(CAMPFIRE_ANNOUNCE)
         campfire_room.speak(message)
       end
-      to_pisswhistle({:message => message, :result => "success", :repo_name => repo_name})
+      post_build_to_webook({:message => message, :result => "success", :repo_name => repo_name}) if defined?(BUILD_WEBHOOK_URL)
     end
   end
 end
