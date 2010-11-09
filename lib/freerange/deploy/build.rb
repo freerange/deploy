@@ -150,7 +150,7 @@ def campfire_room
     unless defined?(CAMPFIRE_DOMAIN) && defined?(CAMPFIRE_ROOM) && defined?(CAMPFIRE_KEY)
       raise "You must define CAMPFIRE_DOMAIN, CAMPFIRE_ROOM and CAMPFIRE_KEY to get build notifications to work"
     end
-    campfire = Tinder::Campfire.new(CAMPFIRE_DOMAIN)
+    campfire = Tinder::Campfire.new(CAMPFIRE_DOMAIN, :ssl => true)
     campfire.login(CAMPFIRE_KEY, 'x')
     campfire.find_room_by_name(CAMPFIRE_ROOM)
   end

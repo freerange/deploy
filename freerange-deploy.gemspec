@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{freerange-deploy}
-  s.version = "1.0.2"
+  s.version = "1.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris Roos, James Adam, Tom Ward, Kalvir Sandhu"]
-  s.date = %q{2010-10-22}
+  s.date = %q{2010-11-09}
   s.default_executable = %q{freerange-deploy}
   s.email = %q{lets@gofreerange.com}
   s.executables = ["freerange-deploy"]
@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<capistrano>, [">= 0"])
       s.add_runtime_dependency(%q<capistrano-ext>, [">= 0"])
       s.add_runtime_dependency(%q<thor>, [">= 0"])
-      s.add_runtime_dependency(%q<tinder>, ["= 1.3.1"])
+      s.add_runtime_dependency(%q<tinder>, ["= 1.4.1"])
       s.add_runtime_dependency(%q<right_aws>, ["= 2.0.0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_runtime_dependency(%q<request-log-analyzer>, [">= 0"])
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<capistrano>, [">= 0"])
       s.add_dependency(%q<capistrano-ext>, [">= 0"])
       s.add_dependency(%q<thor>, [">= 0"])
-      s.add_dependency(%q<tinder>, ["= 1.3.1"])
+      s.add_dependency(%q<tinder>, ["= 1.4.1"])
       s.add_dependency(%q<right_aws>, ["= 2.0.0"])
       s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<request-log-analyzer>, [">= 0"])
@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<capistrano>, [">= 0"])
     s.add_dependency(%q<capistrano-ext>, [">= 0"])
     s.add_dependency(%q<thor>, [">= 0"])
-    s.add_dependency(%q<tinder>, ["= 1.3.1"])
+    s.add_dependency(%q<tinder>, ["= 1.4.1"])
     s.add_dependency(%q<right_aws>, ["= 2.0.0"])
     s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<request-log-analyzer>, [">= 0"])
