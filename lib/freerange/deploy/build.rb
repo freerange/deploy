@@ -174,7 +174,7 @@ namespace :build do
           :message => message,
           :result => "failure",
           :build_output => build_output,
-          :repo_name => repo_name})
+          :repo_name => repo_name}
 
         Net::HTTP.post_form(URI.parse(url),{"payload" => data.to_json})
       end
