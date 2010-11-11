@@ -176,7 +176,7 @@ namespace :build do
           :build_output => build_output,
           :repo_name => repo_name}
 
-        Net::HTTP.post_form(URI.parse(url),{"payload" => data.to_json})
+        Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
       end
     end
 
@@ -189,7 +189,7 @@ namespace :build do
 
       if defined?(BUILD_WEBHOOK_URL)
         data = {:message => message, :result => "success", :repo_name => repo_name}
-        Net::HTTP.post_form(URI.parse(url),{"payload" => data.to_json})
+        Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
       end
     end
   end
