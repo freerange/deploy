@@ -56,30 +56,47 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :announce do
+      name = `git config --get user.name`.strip
+
+      source_repo_url = repository
+      deploying = `git rev-parse HEAD`[0,7]
+      begin
+        deployed = previous_revision[0,7]
+      rescue
+        deployed = "000000"
+      end
+
+      github_url = repository.gsub(/git@/, 'http://').gsub(/\.com:/,'.com/').gsub(/\.git/, '')
+      compare_url = "#{github_url}/compare/#{deployed}...#{deploying}"
+
+      hosts = roles[:app].collect{|r| r.host }.join(", ")
+
+      word = name =~ /&/ ? 'have' : 'has'
+
+      message_to_announce = "#{name} #{word} deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
+
       if room = fetch('campfire_room', nil)
         require 'tinder'
         require 'json'
         campfire = Tinder::Campfire.new(fetch('campfire_domain', 'gofreerange'))
         campfire.login(fetch('campfire_key'), 'x')
         room = campfire.find_room_by_name(room)
+        room.speak message_to_announce
+      end
 
-        name = `git config --get user.name`.strip
+      if deploy_webhook_url = fetch('deploy_webhook_url',nil)
+        require 'net/http'
+        require 'json'
+        data = {
+            :deployed_by => name,
+            :build => deployed,
+            :application => application,
+            :compare_url => compare_url,
+            :github_url => github_url,
+            :hosts => hosts
+        }
 
-        source_repo_url = repository
-        deploying = `git rev-parse HEAD`[0,7]
-        begin
-          deployed = previous_revision[0,7]
-        rescue
-          deployed = "000000"
-        end
-
-        github_url = repository.gsub(/git@/, 'http://').gsub(/\.com:/,'.com/').gsub(/\.git/, '')
-        compare_url = "#{github_url}/compare/#{deployed}...#{deploying}"
-
-        hosts = roles[:app].collect{|r| r.host }.join(", ")
-
-        word = name =~ /&/ ? 'have' : 'has'
-        room.speak "#{name} #{word} deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
+        Net::HTTP.post_form(URI.parse(deploy_webhook_url),{"payload" => data.to_json})
       end
     end
   end

@@ -1,6 +1,5 @@
 require 'tinder'
 require 'json'
-require 'net/http'
 
 module Hub
   # Provides methods for inspecting the environment, such as GitHub user/token
@@ -156,13 +155,10 @@ def campfire_room
   end
 end
 
-def post_build_to_webook(data = {})
-  Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
-end
-
 extend Hub::Context
 
 namespace :build do
+  require 'net/http'
   namespace :announce do
     task :failure do
       revision = `git rev-parse HEAD`.gsub("\n", '')
@@ -172,11 +168,16 @@ namespace :build do
         campfire_room.speak(message)
         campfire_room.speak(build_output)
       end
-      post_build_to_webook({
-        :message => message,
-        :result => "failure",
-        :build_output => build_output,
-        :repo_name => repo_name}) if defined?(BUILD_WEBHOOK_URL)
+
+      if defined?(BUILD_WEBHOOK_URL)
+        data = {
+          :message => message,
+          :result => "failure",
+          :build_output => build_output,
+          :repo_name => repo_name})
+
+        Net::HTTP.post_form(URI.parse(url),{"payload" => data.to_json})
+      end
     end
 
     task :success do
@@ -185,7 +186,11 @@ namespace :build do
       if defined?(CAMPFIRE_ANNOUNCE)
         campfire_room.speak(message)
       end
-      post_build_to_webook({:message => message, :result => "success", :repo_name => repo_name}) if defined?(BUILD_WEBHOOK_URL)
+
+      if defined?(BUILD_WEBHOOK_URL)
+        data = {:message => message, :result => "success", :repo_name => repo_name}
+        Net::HTTP.post_form(URI.parse(url),{"payload" => data.to_json})
+      end
     end
   end
 end
