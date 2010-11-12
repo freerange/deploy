@@ -164,32 +164,40 @@ namespace :build do
       revision = `git rev-parse HEAD`.gsub("\n", '')
       message = "Build #{revision} of #{repo_name} failed: #{github_url(:web => true, :user => 'freerange')}/commits/#{revision}"
       build_output = File.read(".build/output")
-      if defined?(CAMPFIRE_DOMAIN)
-        campfire_room.speak(message)
-        campfire_room.speak(build_output)
-      end
 
       if defined?(BUILD_WEBHOOK_URL)
         data = {
           :message => message,
           :result => "failure",
           :build_output => build_output,
-          :repo_name => repo_name}
-
+          :repo_name => repo_name,
+          :revision => revision
+        }
         Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
+      end
+
+      if defined?(CAMPFIRE_DOMAIN)
+        campfire_room.speak(message)
+        campfire_room.speak(build_output)
       end
     end
 
     task :success do
       revision = `git rev-parse HEAD`.gsub("\n", '')
       message = "Build #{revision} of #{repo_name} was a great success!"
-      if defined?(CAMPFIRE_ANNOUNCE)
-        campfire_room.speak(message)
-      end
 
       if defined?(BUILD_WEBHOOK_URL)
-        data = {:message => message, :result => "success", :repo_name => repo_name}
+        data = {
+          :message => message,
+          :result => "success",
+          :repo_name => repo_name,
+          :revision => revision
+        }
         Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
+      end
+
+      if defined?(CAMPFIRE_ANNOUNCE)
+        campfire_room.speak(message)
       end
     end
   end
