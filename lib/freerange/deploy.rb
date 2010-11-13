@@ -75,15 +75,6 @@ Capistrano::Configuration.instance(:must_exist).load do
 
       message_to_announce = "#{name} #{word} deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
 
-      if room = fetch('campfire_room', nil)
-        require 'tinder'
-        require 'json'
-        campfire = Tinder::Campfire.new(fetch('campfire_domain', 'gofreerange'))
-        campfire.login(fetch('campfire_key'), 'x')
-        room = campfire.find_room_by_name(room)
-        room.speak message_to_announce
-      end
-
       if deploy_webhook_url = fetch('deploy_webhook_url',nil)
         require 'net/http'
         require 'json'
@@ -97,6 +88,15 @@ Capistrano::Configuration.instance(:must_exist).load do
         }
 
         Net::HTTP.post_form(URI.parse(deploy_webhook_url),{"payload" => data.to_json})
+      end
+
+      if room = fetch('campfire_room', nil)
+        require 'tinder'
+        require 'json'
+        campfire = Tinder::Campfire.new(fetch('campfire_domain', 'gofreerange'))
+        campfire.login(fetch('campfire_key'), 'x')
+        room = campfire.find_room_by_name(room)
+        room.speak message_to_announce
       end
     end
   end
