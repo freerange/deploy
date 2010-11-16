@@ -159,6 +159,7 @@ extend Hub::Context
 
 namespace :build do
   require 'net/http'
+  require 'freerange/webhook'
   namespace :announce do
     task :failure do
       revision = `git rev-parse HEAD`.gsub("\n", '')
@@ -173,7 +174,7 @@ namespace :build do
           :repo_name => repo_name,
           :revision => revision
         }
-        Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
+        Freerange::Webhook.post(BUILD_WEBHOOK_URL, data)
       end
 
       if defined?(CAMPFIRE_DOMAIN)
@@ -193,7 +194,7 @@ namespace :build do
           :repo_name => repo_name,
           :revision => revision
         }
-        Net::HTTP.post_form(URI.parse(BUILD_WEBHOOK_URL),{"payload" => data.to_json})
+        Freerange::Webhook.post(BUILD_WEBHOOK_URL, data)
       end
 
       if defined?(CAMPFIRE_ANNOUNCE)

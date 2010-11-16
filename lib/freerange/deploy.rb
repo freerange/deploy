@@ -76,8 +76,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       message_to_announce = "#{name} #{word} deployed build #{deployed} of #{application} to #{hosts}.  Changes deployed: #{compare_url}"
 
       if deploy_webhook_url = fetch('deploy_webhook_url',nil)
-        require 'net/http'
-        require 'json'
+        require 'freerange/webhook'
         data = {
             :deployed_by => name,
             :build => deployed,
@@ -86,8 +85,7 @@ Capistrano::Configuration.instance(:must_exist).load do
             :github_url => github_url,
             :hosts => hosts
         }
-
-        Net::HTTP.post_form(URI.parse(deploy_webhook_url),{"payload" => data.to_json})
+        Freerange::Webhook.post(deploy_webhook_url, data)
       end
 
       if room = fetch('campfire_room', nil)
