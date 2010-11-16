@@ -91,8 +91,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       if room = fetch('campfire_room', nil)
         require 'tinder'
         require 'json'
-        campfire = Tinder::Campfire.new(fetch('campfire_domain', 'gofreerange'))
-        campfire.login(fetch('campfire_key'), 'x')
+        campfire = Tinder::Campfire.new(fetch('campfire_domain', 'gofreerange'), :token => fetch('campfire_key'))
         room = campfire.find_room_by_name(room)
         room.speak message_to_announce
       end
