@@ -51,7 +51,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
     end
 
-    task :bundle, :roles => :app do
+    task :bundle, :except => { :no_release => true } do
       run "cd #{release_path} && bundle install #{shared_path}/gems"
     end
 
