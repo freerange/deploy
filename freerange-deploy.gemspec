@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris Roos, James Adam, Tom Ward, Kalvir Sandhu"]
-  s.date = %q{2011-01-14}
+  s.date = %q{2011-03-23}
   s.default_executable = %q{freerange-deploy}
   s.email = %q{lets@gofreerange.com}
   s.executables = ["freerange-deploy"]
