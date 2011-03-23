@@ -173,7 +173,7 @@ namespace :build do
           :repo_name => repo_name,
           :revision => revision
         }
-        Freerange::Webhook.post(BUILD_WEBHOOK_URL, data)
+        Freerange::Webhook.post(BUILD_WEBHOOK_URL, {}, data)
       end
 
       if defined?(CAMPFIRE_DOMAIN)
@@ -193,7 +193,7 @@ namespace :build do
           :repo_name => repo_name,
           :revision => revision
         }
-        Freerange::Webhook.post(BUILD_WEBHOOK_URL, data)
+        Freerange::Webhook.post(BUILD_WEBHOOK_URL, {}, data)
       end
 
       if defined?(CAMPFIRE_ANNOUNCE)
