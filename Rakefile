@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name               = "freerange-deploy"
-  s.version            = "1.0.13"
+  s.version            = "1.0.14"
   s.summary            = "Enables simple git-based deployments to freerange-compatible hosts"
   s.author             = "Chris Roos, James Adam, Tom Ward, Kalvir Sandhu"
   s.email              = "lets@gofreerange.com"
@@ -26,8 +26,8 @@ spec = Gem::Specification.new do |s|
   s.executables        = ["freerange-deploy"]
   
   s.has_rdoc          = true
-  s.extra_rdoc_files  = %w(README)
-  s.rdoc_options      = %w(--main README)
+  s.extra_rdoc_files  = %w(README.md)
+  s.rdoc_options      = %w(--main README.md)
 
   # Add any extra files to include in the gem
   s.files             = `cd #{path} && git ls-files`.split("\n").sort
@@ -84,8 +84,8 @@ end
 
 # Generate documentation
 Rake::RDocTask.new do |rd|
-  rd.main = "README"
-  rd.rdoc_files.include("README", "lib/**/*.rb")
+  rd.main = "README.md"
+  rd.rdoc_files.include("README.md", "lib/**/*.rb")
   rd.rdoc_dir = "rdoc"
 end
 
@@ -95,17 +95,20 @@ task :clean => [:clobber_rdoc, :clobber_package] do
 end
 
 desc 'Tag the repository in git with gem version number'
-task :tag => [:gemspec, :package] do
-  if `git diff --cached`.empty?
+task :tag do
+  changed_files = `git diff --cached --name-only`.split("\n") + `git diff --name-only`.split("\n")
+  if changed_files.empty? || changed_files == ['Rakefile']
+    Rake::Task["package"].invoke
+  
     if `git tag`.split("\n").include?("v#{spec.version}")
       raise "Version #{spec.version} has already been released"
     end
-    `git add #{File.expand_path("../#{spec.name}.gemspec", __FILE__)}`
+    `git add #{File.expand_path("../#{spec.name}.gemspec", __FILE__)} Rakefile`
     `git commit -m "Released version #{spec.version}"`
     `git tag v#{spec.version}`
     `git push --tags`
     `git push`
   else
-    raise "Unstaged changes still waiting to be committed"
+    raise "Repository contains uncommitted changes; either commit or stash."
   end
 end

@@ -2,20 +2,20 @@
 
 Gem::Specification.new do |s|
   s.name = %q{freerange-deploy}
-  s.version = "1.0.13"
+  s.version = "1.0.14"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris Roos, James Adam, Tom Ward, Kalvir Sandhu"]
-  s.date = %q{2011-03-23}
+  s.date = %q{2011-03-29}
   s.default_executable = %q{freerange-deploy}
   s.email = %q{lets@gofreerange.com}
   s.executables = ["freerange-deploy"]
   s.extra_rdoc_files = [
-    "README"
+    "README.md"
   ]
   s.files = [
     ".gitignore",
-    "README",
+    "README.md",
     "Rakefile",
     "bin/freerange-deploy",
     "freerange-deploy.gemspec",
@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
     "lib/freerange/webhook.rb"
   ]
   s.homepage = %q{http://gofreerange.com}
-  s.rdoc_options = ["--main", "README"]
+  s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Enables simple git-based deployments to freerange-compatible hosts}
