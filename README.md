@@ -1,10 +1,8 @@
-freerange/deploy
-================
+# freerange/deploy
 
 Allows simple, git-based deployment on freerange-compatible servers (see assumptions below)
 
-How to use
-----------
+## How to use
 
 In your project, run:
 
@@ -23,8 +21,8 @@ For simple apps, you should now be able to deploy:
 
     $ cap production deploy
 
-Configuring Redis on server
----------------------------
+## Configuring Redis on server
+
 You can install redis on the destination server by setting this variable in config/deploy.rb
 
     set :require_redis, true
@@ -35,8 +33,7 @@ Now when you run the cap:setup task redis will be installed or you can run this 
 
 Redis is installed with the ubuntu default config living in /etc/redis/redis.conf. It will run on port 6379.
 
-Assumptions
------------
+## Assumptions
 
 1. You're deploying as 'deploy'
 2. You're deploying to /var/www/<application>
